@@ -85,4 +85,22 @@ const getLeaderboard = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, leaderboard, "Leaderboard retrieved"));
 });
 
-export { createChallenge, joinChallenge, updateProgress, getLeaderboard };
+const getChallenges = asyncHandler(async (req, res) => {
+    try {
+        const challenges = await Challenge.find().sort({ startDate: -1 });
+        return res.status(200).json(new ApiResponse(200, challenges, "Challenges retrieved successfully"));
+    } catch (error) {
+        throw new ApiError(500, "Failed to fetch challenges");
+    }
+});
+
+const getChallengeById = asyncHandler(async (req, res) => {
+    const { challengeId } = req.params;
+    const challenge = await Challenge.findById(challengeId);
+    if (!challenge) {
+        throw new ApiError(404, "Challenge not found");
+    }
+    return res.status(200).json(new ApiResponse(200, challenge, "Challenge retrieved successfully"));
+});
+
+export { createChallenge, joinChallenge, updateProgress, getLeaderboard , getChallenges , getChallengeById};

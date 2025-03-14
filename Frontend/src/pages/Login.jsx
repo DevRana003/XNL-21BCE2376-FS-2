@@ -1,26 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { loginUser } from "../services/authService";
-import { toast } from "react-toastify";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
+    const { login } = useContext(AuthContext);
     const [formData, setFormData] = useState({ username: "", password: "" });
-    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const response = await loginUser(formData);
-            toast.success("Login successful!");
-            localStorage.setItem("token", response.data.accessToken);
-            navigate("/dashboard");
-        } catch (error) {
-            toast.error("Invalid credentials");
-        }
+        login(formData);
     };
 
     return (

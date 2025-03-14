@@ -8,23 +8,26 @@ import Leaderboard from "./pages/Leaderboard";
 import Challenges from "./pages/Challenges";
 import Navbar from "./components/Navbar";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     return (
-        <Router>
+        <>
             <Navbar />
             <ToastContainer />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/challenges" element={<Challenges />} />
+
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+                <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+                <Route path="/challenges" element={<ProtectedRoute><Challenges /></ProtectedRoute>} />
+
             </Routes>
-        </Router>
+        </>
     );
 }
 
