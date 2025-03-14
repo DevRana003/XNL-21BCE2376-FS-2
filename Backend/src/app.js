@@ -19,4 +19,10 @@ import userRouter from "./routes/user.routes.js"
 app.use("/api/v1/users",userRouter)
 
 
+
+
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Route not found' });
+});
+
 export { app }

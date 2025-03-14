@@ -23,7 +23,7 @@ const genrateTokens = async(userId)=>{
 
 const registerUser = asyncHandler(async(req,res)=>{
 
-    const{fullName , email , username , password} = req.body;
+    const{fullName , email , username , password , role} = req.body;
     
     if([fullName , email , username , password].some((field)=>field?.trim()===""))
     {
@@ -49,7 +49,8 @@ const registerUser = asyncHandler(async(req,res)=>{
         avatar:avatar.url,
         username, 
         email,
-        password
+        password,
+        role: role || "User"
     })
 
     const createduser = await User.findById(user._id).select("-password -refreshToken")
@@ -215,6 +216,18 @@ const changeUseravatar = asyncHandler(async(req,res)=>{
     return res.status(200).json(new ApiResponse(200,{user},"successfull changed avatar"))
 })
 
+const getAdminDashboard = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { message: "Welcome Admin!" }, "Admin Dashboard"));
+});
+
+const getTrainerSection = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { message: "Welcome Trainer!" }, "Trainer Section"));
+});
+
 export { 
     registerUser,
     loginUser,
@@ -224,4 +237,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     changeUseravatar,
+    getAdminDashboard,
+    getTrainerSection
 }           

@@ -33,6 +33,11 @@ const userSchema = new Schema(
             type:String,
             required : [true , 'Password is required ']
         },
+        role: {
+            type: String,
+            enum: ["User", "Trainer", "Admin"],
+            default: "User"
+        },
         refreshToken:{
             type: String
         }
@@ -58,7 +63,8 @@ userSchema.methods.generateAccessToken = function(){
             _id:this.id,
             email:this.email,
             username:this.username,
-            fullName:this.fullName
+            fullName:this.fullName,
+            role: this.role
         },
         process.env.ACCESS_TOKEN_SECRET,
         {

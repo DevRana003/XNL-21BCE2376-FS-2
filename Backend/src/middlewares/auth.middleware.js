@@ -20,3 +20,16 @@ export const verifyjwt = asyncHandler(async(req,res,next)=>{
         throw new ApiError(401,error?.message||"invalid access token")
     }
 })
+
+export const checkRole = (...allowedRoles) => {
+    return (req, res, next) => {
+        try {
+            if (!req.user || !allowedRoles.includes(req.user.role)) {
+                throw new ApiError(403, "You do not have permission to perform this action");
+            }
+            next();
+        } catch (error) {
+            throw new ApiError(401,error?.message||"check role error")
+        }
+    };
+};
