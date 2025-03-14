@@ -1,4 +1,6 @@
 import { Server } from "socket.io";
+import { Leaderboard } from "../models/leaderboard.model.js";
+import { Challenge } from "../models/challenge.model.js";
 
 const onlineUsers = new Map();
 
@@ -25,6 +27,28 @@ export const initializeSocket = (server) => {
             if (receiverSocket) {
                 io.to(receiverSocket).emit("receiveMessage", { senderId, message });
             }
+        });
+
+
+        socket.on("joinChallenge", async ({ userId, challengeId }) => {
+            const challenge = await Challenge.findById(challengeId).populate("participants.userId", "fullName");
+            if (challenge) {
+                io.emit(`challengeUpdate:${challengeId}`, {
+                    message: `${challenge.participants.length} participants in ${challenge.title}`,
+                });
+            }
+        });
+
+
+        socket.on("updateProgress", async ({ userId, challengeId, progress }) => {
+            await Leaderboard.findOneAndUpdate({ userId, challengeId }, { score: progress });
+
+
+            const leaderboard = await Leaderboard.find({ challengeId })
+                .sort({ score: -1 })
+                .populate("userId", "fullName avatar");
+
+            io.emit(`leaderboardUpdate:${challengeId}`, leaderboard);
         });
 
 
